@@ -63,13 +63,13 @@ public abstract class ConditionBasedBehavior : MonoBehaviour {
 
 	public void ActionConditionDestroyed(int i)
 	{
-		if (actionConditions.Count >= i)
+		if (actionConditions != null && actionConditions.Count >= i)
 			actionConditions.RemoveAt(i);
 	}
 
 	public void RecreateCondition(int i)
 	{
-		if (actionConditions.Count >= i) {
+		if (actionConditions != null &&  actionConditions.Count >= i) {
 			actionConditions[i] = ActionCondition.GenerateBy(conditions[i]);
 				
 		}
@@ -123,15 +123,15 @@ public class ConditionBasedEditor : Editor {
 			{
 				lastConditionType = generate.conditions[i].selectionValue;
 				generate.conditions[i] = EditCondition(generate.conditions[i]);
-				if (generate.conditions[i].selectionValue != lastConditionType)
-				{
-					generate.RecreateCondition(i);
-				}
 
 				if (generate.conditions[i] == null)
 				{
 					shouldRecreateList = true;
 					generate.ActionConditionDestroyed(i);
+				}
+				else if (generate.conditions[i].selectionValue != lastConditionType)
+				{
+					generate.RecreateCondition(i);
 				}
 			}		
 			if (shouldRecreateList)
